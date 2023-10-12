@@ -1,0 +1,31 @@
+{
+  "name" : "bone-bot",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "962e5e39f8a25f42522f51fffc574e05a3efd26b",
+  "dependencies" : [ {
+    "name" : "fmt",
+    "version>=" : "10.1.0",
+    "$comment" : "    find_package(fmt CONFIG REQUIRED)\n\n    target_link_libraries(main PRIVATE fmt::fmt)\n"
+  }, {
+    "name" : "zlib",
+    "version>=" : "1.3"
+  }, {
+    "name" : "libsodium",
+    "version>=" : "1.0.18#9"
+  }, {
+    "name" : "spdlog",
+    "version>=" : "1.12.0"
+  }, {
+    "name" : "openssl",
+    "version>=" : "3.1.2#3"
+  }, {
+    "name" : "opus",
+    "version>=" : "1.4"
+  }, {
+    "name" : "tomlplusplus",
+    "version>=" : "3.1.0"
+  }, {
+    "name" : "catch2",
+    "version>=" : "3.4.0"
+  } ]
+}

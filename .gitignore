@@ -1,0 +1,9 @@
+build/
+cmake-build-*
+.idea
+susser/venv/
+vcpkg_installed/
+bone-bot-log.log
+resources/sus_input_images/*
+resources/sus_output/*
+__pycache__/
