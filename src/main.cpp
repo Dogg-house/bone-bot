@@ -60,6 +60,8 @@ int main() {
     std::filesystem::copy_file("base-config.toml", full_config_path);
   }
 
+  spdlog::info("Parsing config file at: '{}'", full_config_path.string());
+
   toml::table config;
   try {
     config = toml::parse_file(full_config_path.string());
