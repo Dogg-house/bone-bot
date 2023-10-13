@@ -79,7 +79,7 @@ team tagged 'Extras'
 ### Cloning
 You'll need to do a recursive clone since we've got a submodule
 ```shell
-git clone --recursive git@github.com:Dogg-house/bone-bot.git
+git clone --recursive git@github.com:The-Dogghouse/bone-bot.git
 ```
 
 If you forgot to do this it'll fail to build, and you'll
