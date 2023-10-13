@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
   <img src="resources/bone-bot-icon.jpg" alt="Bone icon">
 </div>
 <!-- Of course centering sucks, it's based on HTML...-->
