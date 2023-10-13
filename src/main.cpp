@@ -1,5 +1,6 @@
 #include "insults.h"
 #include "teams.h"
+#include "project.h"
 #include <algorithm>
 #include <cstdlib>
 #include <dpp/dpp.h>
@@ -157,9 +158,19 @@ int main() {
   bot.on_slashcommand([&words, resource_directory, sus_input_images_path, sus_output_images_path](
                           dpp::slashcommand_t event) -> dpp::job {
     auto thinking = event.co_thinking();
-    spdlog::info("On slash command");
+    spdlog::debug("On slash command");
     auto cluster = event.from->creator;
     const auto &command_name = event.command.get_command_name();
+
+    if (command_name == "bone-about") {
+      spdlog::info("Sending `bone-about`");
+      event.edit_response(fmt::format(R"(Bone Bot v{}
+Code by: <@277914802071011328>
+Art by: <@551533880432263201>
+Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Link is in <> to supress the embed
+          BONE_BOT_VERSION));
+      co_return;
+    }
 
     if (command_name == "bone-sailor") {
       const auto author_mention = event.command.member.get_mention();
@@ -371,6 +382,10 @@ int main() {
 
       // clang-format on
       bot.global_command_create(bone_team_command);
+
+      dpp::slashcommand bone_about_command{
+          "bone-about", "Names and shames the people responsible for this bot", bot.me.id};
+      bot.global_command_create(bone_about_command);
     }
   });
 

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
-project(bone_bot LANGUAGES CXX)
+project(bone_bot
+    VERSION 0.8 # Version '1.0' when `bone-teams` is done
+    LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -8,6 +10,11 @@ add_executable(bone_bot
     src/insults.h src/insults.cpp
     src/teams.h src/teams.cpp
 )
+
+configure_file(src/project.h.in
+    ${PROJECT_BINARY_DIR}/project.h
+)
+target_include_directories(bone_bot PRIVATE ${PROJECT_BINARY_DIR})
 
 add_executable(tests
     src/tests.cpp

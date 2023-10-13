@@ -1,0 +1,11 @@
+#pragma once
+#include <string>
+// Make sure clang format doesn't touch the @ signs
+// clang-format off
+
+// Constant zero-ver
+const static std::string BONE_BOT_VERSION{"0.@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@"};
+const static int BONE_BOT_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
+const static int BONE_BOT_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
+
+// clang-format on
