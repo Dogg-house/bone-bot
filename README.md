@@ -73,7 +73,7 @@ team tagged 'Extras'
 * C++20 Compliant Compiler:
   * Tested with GCC 12.3.0
 * vcpkg Package Manager: https://vcpkg.io/en/getting-started
-* (Optional) Python 3.9+ (for `bone-sus`)
+* (Optional) Rust (for `bone-sus`) uses [rusty-sussy](https://github.com/The-Dogghouse/rusty-sussy)
   * Gifski: https://gif.ski/
 * An API Key from Discord
 ### Cloning
@@ -116,26 +116,16 @@ To actually build, run the following:
 cmake --build build/ --parallel
 ```
 
-### Sus Script (Python)
+### rusty-sussy
 To enable the `bone-sus` command, you'll need to
-set up the Python environment.
+build `rusty-sussy`.
 
 `cd` into the `susser/` directory
 ```shell
 cd susser/
 ```
 
-Set up a Python virtual environment
+Build the release version with `cargo`
 ```shell
-python -mvenv venv/
-```
-
-Activate the virtual environment
-```shell
-source venv/bin/activate
-```
-
-install the requirements
-```shell
-pip install -r requiremnts.txt
+cargo build --release
 ```

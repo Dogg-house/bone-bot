@@ -1,3 +1,6 @@
 [submodule "lib/DPP"]
 	path = lib/DPP
 	url = https://github.com/brainboxdotcc/DPP.git
+[submodule "rusty-sussy"]
+	path = rusty-sussy
+	url = https://github.com/The-Dogghouse/rusty-sussy.git

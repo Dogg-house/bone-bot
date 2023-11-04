@@ -218,7 +218,7 @@ Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Li
       const auto result_path = sus_output_images_path / (std::to_string(current_unix_timestamp) + ".gif");
 
       const auto sus_command =
-          fmt::format("susser/venv/bin/python susser/sus.py {} {} {}", out_path.string(), result_path.string(), width);
+          fmt::format("rusty-sussy/target/release/rusty-sussy --input=./{} --output=./{} --width={}", out_path.string(), result_path.string(), width);
       spdlog::info("sus command {}", sus_command);
       std::system(sus_command.c_str());
 
