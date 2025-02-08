@@ -9,8 +9,9 @@ std::vector<bone_team> make_teams(const std::vector<dpp::guild_member> &members,
   std::vector<dpp::guild_member> captains;
   if (captain_role) {
     for (const auto &possible_captain : members) {
-      if (std::find(possible_captain.roles.begin(), possible_captain.roles.end(), captain_role.value()) !=
-          possible_captain.roles.end())
+      const auto &possible_captain_roles = possible_captain.get_roles();
+      if (std::find(possible_captain_roles.begin(), possible_captain_roles.end(), captain_role.value()) !=
+         possible_captain_roles.end())
         captains.emplace_back(possible_captain);
     }
   }

@@ -156,7 +156,7 @@ int main() {
 
   // ----- Slash commands -----
   bot.on_slashcommand([&words, resource_directory, sus_input_images_path, sus_output_images_path](
-                          dpp::slashcommand_t event) -> dpp::job {
+                          const dpp::slashcommand_t &event) -> dpp::task<void> {
     auto thinking = event.co_thinking();
     spdlog::debug("On slash command");
     auto cluster = event.from->creator;
