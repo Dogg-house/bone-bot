@@ -20,6 +20,7 @@ std::vector<dpp::guild_member> fake_members(int count) {
 
     dpp::guild_member gm{};
     gm.user_id = i;
+    gm.set_nickname(fmt::format("nickname: {}", i));
     result.emplace_back(gm);
   }
   return result;
@@ -78,3 +79,32 @@ TEST_CASE("Extra team members", "[teams]") {
       REQUIRE(team.members.size() == 1);
   }
 }
+
+TEST_CASE("Team captains are respected", "[teams]") {
+  const auto members = fake_members(12);
+
+  // make the first two members captains
+  const auto &captain_1 = members[0];
+  const auto &captain_2 = members[1];
+  std::vector<dpp::guild_member> captains{captain_1, captain_2};
+
+  const auto teams = make_teams(members, 2, {}, captains);
+
+  REQUIRE(teams.size() == 2ul);
+  const auto &team_1 = teams[0].members;
+  const auto &team_2 = teams[1].members;
+
+  auto find_captain_1 = [&captain_1] (const dpp::guild_member &element) {
+    return captain_1.user_id == element.user_id;
+  };
+
+  auto find_captain_2 = [&captain_2] (const dpp::guild_member &element) {
+    return captain_2.user_id == element.user_id;
+  };
+
+  REQUIRE(std::ranges::find_if(team_1, find_captain_1) != team_1.end());
+  REQUIRE(std::ranges::find_if(team_1, find_captain_2) == team_1.end());
+
+  REQUIRE(std::ranges::find_if(team_2, find_captain_2) != team_2.end());
+  REQUIRE(std::ranges::find_if(team_2, find_captain_1) == team_2.end());
+};

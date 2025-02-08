@@ -9,6 +9,7 @@ add_executable(bone_bot
     src/main.cpp
     src/insults.h src/insults.cpp
     src/teams.h src/teams.cpp
+    src/users.h src/users.cpp
 )
 
 configure_file(src/project.h.in
@@ -20,6 +21,7 @@ add_executable(tests
     src/tests.cpp
     src/insults.h src/insults.cpp
     src/teams.h src/teams.cpp
+    src/users.h src/users.cpp
 )
 
 target_compile_features(bone_bot PUBLIC cxx_std_20)

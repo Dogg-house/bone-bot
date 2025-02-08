@@ -1,20 +1,16 @@
 #include "teams.h"
+#include "users.h"
 #include <cmath>
 #include <random>
+#include <variant>
+#include <ranges>
+#include <fmt/core.h>
+#include <dpp/unicode_emoji.h>
 
 std::default_random_engine team_random_engine{std::random_device{}()};
 
 std::vector<bone_team> make_teams(const std::vector<dpp::guild_member> &members, std::optional<int> team_count,
-    std::optional<int> team_size, std::optional<dpp::snowflake> captain_role) {
-  std::vector<dpp::guild_member> captains;
-  if (captain_role) {
-    for (const auto &possible_captain : members) {
-      const auto &possible_captain_roles = possible_captain.get_roles();
-      if (std::find(possible_captain_roles.begin(), possible_captain_roles.end(), captain_role.value()) !=
-         possible_captain_roles.end())
-        captains.emplace_back(possible_captain);
-    }
-  }
+    std::optional<int> team_size, std::vector<dpp::guild_member> captains) {
 
   int generate_teams{2}; // generate 2 teams by default
   if (team_count)
@@ -30,37 +26,44 @@ std::vector<bone_team> make_teams(const std::vector<dpp::guild_member> &members,
   team_pool.reserve(members.size() - captains.size());
 
   for (const auto &member : members) {
-    if (std::find(captains.begin(), captains.end(), member) != captains.end())
+    auto is_captain = [&member](const dpp::guild_member &element) {
+      return member.user_id == element.user_id;
+    };
+    if (std::ranges::find_if(captains, is_captain) != captains.end())
       continue;
     team_pool.emplace_back(member);
   }
 
-  std::shuffle(team_pool.begin(), team_pool.end(), team_random_engine);
-
   if (!team_size)
-    team_size = std::ceil(static_cast<double>(team_pool.size()) / generate_teams);
+    team_size = std::ceil(static_cast<double>(team_pool.size() + captains.size()) / generate_teams);
+
+  std::ranges::shuffle(team_pool, team_random_engine);
 
   std::vector<bone_team> result{bone_team{}}; // Create with the first team already made
-  auto member_number = 0;
+
   auto team_index = 0;
+  // If we have captains, handle the first one by hand
+  if (!captains.empty()) {
+    result[0].members.emplace_back(captains[0]);
+    result[0].captain = captains[0];
+  }
   for (const auto &member : team_pool) {
-    if (member_number == team_size.value() && team_index < generate_teams) {
+    if (result[team_index].members.size() == team_size.value() && team_index < generate_teams) {
       team_index++;
       auto &new_team = result.emplace_back(); // Default construct another team at the end
 
-      if (captains.size() > team_index)
+      if (captains.size() > team_index) {
         new_team.members.emplace_back(captains[team_index]);
+        new_team.captain = captains[team_index];
+      }
 
       // We've generated all the teams,
       // we're on extras now
       if (team_index == generate_teams)
         new_team.type = team_type::extra;
-
-      member_number = 0;
     }
 
     result[team_index].members.emplace_back(member);
-    member_number++;
   }
 
   return result;
@@ -82,6 +85,8 @@ std::string format_teams(const std::vector<bone_team> &teams, const word_collect
     }
 
     for (const auto &team_member : team.members) {
+      if (team.captain && team_member.user_id == team.captain->user_id)
+        ss << dpp::unicode_emoji::star << ' ';
       ss << team_member.get_mention() << '\n';
     }
 
@@ -89,4 +94,23 @@ std::string format_teams(const std::vector<bone_team> &teams, const word_collect
   }
 
   return ss.str();
+}
+
+dpp::task<std::vector<dpp::guild_member>> get_captains_for_command(const dpp::slashcommand_t &event) {
+  std::vector<dpp::guild_member> captains{};
+  captains.reserve(4);
+
+  for (auto i = 1; i <= 4; i++) {
+    const auto &captain_param = event.get_parameter(fmt::format("captain-{}", i));
+    if (!std::holds_alternative<dpp::snowflake>(captain_param))
+      continue;
+
+    const auto maybe_captain = co_await get_user(std::get<dpp::snowflake>(captain_param), event);
+    if (!maybe_captain)
+      continue;
+
+    captains.emplace_back(maybe_captain.value());
+  }
+
+  co_return captains;
 }

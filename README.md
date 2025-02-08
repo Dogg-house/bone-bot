@@ -39,7 +39,8 @@ team tagged 'Extras'
 
 `team-size`: The size of team to generate (default: # of members / `team-count`)
 
-`captain-role`: (Not done, lol) Role of a 'captain' of a team. Two captains will not be placed on one team
+`captain-1`, `captain-2`, `captain-3`, `captain-4`: Positional captains for each team.
+Two captains will not be placed on one team
 
 ```
 /bone-teams channel channel [team-count] [team-size] [captain-role]
@@ -61,7 +62,8 @@ team tagged 'Extras'
 
 `team-size`: The size of team to generate (default: # of members / `team-count`)
 
-`captain-role`: (Not done, lol) Role of a 'captain' of a team. Two captains will not be placed on one team
+`captain-1`, `captain-2`, `captain-3`, `captain-4`: Positional captains for each team.
+Two captains will not be placed on one team
 
 ```
 /bone-teams event event-url [team-count] [team-size] [captain-role]

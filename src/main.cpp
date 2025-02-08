@@ -18,6 +18,7 @@
 #include <toml++/toml.h>
 #include <variant>
 #include <vector>
+#include "users.h"
 
 const std::string logfile{"bone-bot.log"};
 
@@ -245,6 +246,8 @@ Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Li
         team_size = static_cast<int>(std::get<int64_t>(size_param));
       }
 
+      const auto captains = co_await get_captains_for_command(event);
+
       if (subcommand.name == "channel") {
         const auto channel_id = std::get<dpp::snowflake>(event.get_parameter("channel"));
         auto channel = co_await cluster->co_channel_get(channel_id);
@@ -267,7 +270,7 @@ Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Li
         for (const auto &[snowflake, _] : members)
           result.push_back(dpp::find_guild_member(event.command.guild_id, snowflake));
 
-        const auto teams = make_teams(result, team_count, team_size);
+        const auto teams = make_teams(result, team_count, team_size, captains);
         const auto formatted_teams = format_teams(teams, words);
 
         co_await thinking;
@@ -352,7 +355,7 @@ Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Li
 
       // Document required parameters,
       // rather than just having a 'true'
-      const auto required_param{true};
+      constexpr auto required_param{true};
 
       dpp::slashcommand bone_sus_command{"bone-sus", "Bring the crew-mates in on an image", bot.me.id};
       bone_sus_command.add_option(dpp::command_option(dpp::co_attachment, "file", "Select an image", required_param));
@@ -372,13 +375,21 @@ Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Li
               .add_option({dpp::co_channel, "channel", "Channel with people in it", required_param})
               .add_option({dpp::co_integer, "team-count", "Number of teams to generate, this or `team-size` is required"})
               .add_option({dpp::co_integer, "team-size", "Number members per team, this or `team-count` is required"})
-              .add_option({dpp::co_role, "captain-role","Role of a 'captain' of a team. Two captains will not be placed on one team"}));
+              .add_option({dpp::co_user, "captain-1","Captain of the 1st team"})
+              .add_option({dpp::co_user, "captain-2","Captain of the 2nd team"})
+              .add_option({dpp::co_user, "captain-3","Captain of the 3rd team"})
+              .add_option({dpp::co_user, "captain-4","Captain of the 4th team"})
+              );
       bone_team_command.add_option(
           dpp::command_option{dpp::co_sub_command, "event", "Generate teams from people interested in an event"}
               .add_option({dpp::co_string, "event-url", "The URL of the event to pull participants from", required_param})
               .add_option({dpp::co_integer, "team-count", "Number of teams to generate, this or `team-size` is required"})
               .add_option({dpp::co_integer, "team-size", "Number members per team, this or `team-count` is required"})
-              .add_option({dpp::co_role, "captain-role","Role of a 'captain' of a team. Two captains will not be placed on one team"}));
+              .add_option({dpp::co_user, "captain-1","Captain of the 1st team"})
+              .add_option({dpp::co_user, "captain-2","Captain of the 2nd team"})
+              .add_option({dpp::co_user, "captain-3","Captain of the 3rd team"})
+              .add_option({dpp::co_user, "captain-4","Captain of the 4th team"})
+              );
 
       // clang-format on
       bot.global_command_create(bone_team_command);
