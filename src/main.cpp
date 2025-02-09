@@ -168,7 +168,8 @@ int main() {
       event.edit_response(fmt::format(R"(Bone Bot v{}
 Code by: <@277914802071011328>
 Art by: <@551533880432263201>
-Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>)", // Link is in <> to supress the embed
+Contribute to the problem @ <https://github.com/The-Dogghouse/bone-bot>
+Our versioning scheme <https://0ver.org/>)", // Links are in <> to supress the embed
           BONE_BOT_VERSION));
       co_return;
     }
